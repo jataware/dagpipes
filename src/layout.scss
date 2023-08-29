@@ -1,0 +1,57 @@
+.container {
+  display: grid;
+
+  grid-template-areas:
+    "header header header"
+    "main main aside"
+    "footer footer footer";
+
+  grid-template-columns: 200px 1fr 200px;
+  grid-template-rows: auto 1fr auto;
+  grid-gap: 10px;
+
+  height: 100vh;
+}
+
+header {
+  padding: 0.2rem 1rem;
+  grid-area: header;
+  border: 1px dashed blue;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 1rem;
+  width: 1rem;
+  padding: 1rem;
+  border: 1px dashed maroon;
+  marging: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+nav {
+  ul {
+    display: flex;
+  }
+}
+
+main {
+  grid-area: main;
+  border: 1px dashed gray;
+  position: relative;
+}
+
+aside {
+  grid-area: aside;
+  margin-right: 0.5rem;
+  border: 1px dashed orange;
+}
+
+footer {
+  grid-area: footer;
+  border: 1px dashed green;
+  padding: 1rem;
+}
