@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
 import { css } from '@emotion/css';
-// import styled from '@emotion/styled';
 import './layout.scss';
+import clsx from 'clsx';
+import random from 'lodash/random';
 
 import PngLogo from "./assets/DAG|PIPES.png";
 
@@ -29,16 +30,24 @@ const Link = ({children}) => {
 
 const GridLayout = ({children}) => {
 
+  const size = random(200, 440),
+        x = random(-50, 0),
+        y = random(-50, 0);
+
   return (
     <div className="container">
 
       <header>
 
-        <div className="logo"
-             style={{
-               cursor: 'pointer',
-               backgroundImage: `url(${PngLogo})`
+        <div style={{
              }}
+             className={clsx([css`
+               background-image: url(${PngLogo});
+               cursor: pointer;
+               background-position-x: ${x}px;
+               background-position-y: ${y}px;
+               background-size: ${size}px;
+             `, "logo"])}
         >
         </div>
 
