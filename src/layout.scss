@@ -14,7 +14,7 @@
 }
 
 header {
-  padding: 0.2rem 1rem;
+  padding: 0.2rem 2rem;
   grid-area: header;
   border: 1px dashed blue;
   display: flex;
@@ -22,18 +22,29 @@ header {
 }
 
 .logo {
-  height: 1rem;
-  width: 1rem;
-  padding: 1rem;
-  border: 1px dashed maroon;
+  height: 2.5rem;
+  width: 2.5rem;
   marging: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  padding: 0.5rem;
+  background-position-x: -54px;
+  background-position-y: -27px;
+  background-repeat: no-repeat;
+  background-size: 250px;
+  border: 3px solid #ac46a9;
 }
 
 nav {
+  padding-right: 1rem;
   ul {
+    margin-block-start: 1rem;
+    margin-block-end: 1rem;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 1rem;
     display: flex;
   }
 }
@@ -54,4 +65,34 @@ footer {
   grid-area: footer;
   border: 1px dashed green;
   padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-areas:
+      "header"
+      "main"
+      "main"
+      "main"
+      "aside"
+      "footer";
+
+    grid-template-columns: 1fr;
+    grid-template-rows:
+      auto /* Header */
+      minmax(75px, auto) /* Nav */
+      1fr /* Content */
+      minmax(75px, auto) /* Sidebar */
+      auto; /* Footer */
+  }
+
+  // main {
+  //   display: flex;
+  //   flex-direction: column;
+  // }
+
+  aside {
+    margin: 0;
+    // max-height: 15rem;
+  }
 }

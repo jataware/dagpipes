@@ -1,0 +1,48 @@
+
+.sidebar {
+
+  // position: absolute;
+  // left: 0;
+  // right: 0;
+  bottom: 0;
+  width: 50%;
+
+  border: 1px dashed purple;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-content: center;
+  align-self: center;
+  margin: auto;
+
+  section {
+
+    margin: auto;
+    display: flex;
+    width: 20rem;
+    justify-content: space-between;
+
+    .dndnode {
+
+      padding: 0.5rem;
+      border: 1px solid #1a192b;
+
+      border-radius: 2px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: grab;
+    }
+  }
+}
+
+
+.sidebar .dndnode.input {
+  border-color: #0041d0;
+}
+
+.sidebar .dndnode.output {
+  border-color: #ff0072;
+}

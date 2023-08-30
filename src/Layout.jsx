@@ -1,6 +1,31 @@
 import React, { useCallback } from 'react';
+import { css } from '@emotion/css';
+// import styled from '@emotion/styled';
 import './layout.scss';
 
+import PngLogo from "./assets/DAG|PIPES.png";
+
+const Link = ({children}) => {
+  return (
+    <a href="/"
+       className={css`
+         color: #ac46a9;
+         text-decoration: none;
+         font-weight: bold;
+         padding: 0.5rem;
+         border-radius: 6px;
+
+        &:hover {
+           opacity: 0.8;
+           background: #EEE;
+           border-bottom: 1px solid #ac46a950;
+        }
+       `
+       }>
+      {children}
+    </a>
+  );
+};
 
 const GridLayout = ({children}) => {
 
@@ -9,17 +34,23 @@ const GridLayout = ({children}) => {
 
       <header>
 
-        <div className="logo">
-          Logo
+        <div className="logo"
+             style={{
+               cursor: 'pointer',
+               backgroundImage: `url(${PngLogo})`
+             }}
+        >
         </div>
 
         <nav>
           <ul>
-            <li>Home</li>
+            <li><Link>Home</Link></li>
             &nbsp;
-            <li>Github</li>
             &nbsp;
-            <li>Contact</li>
+            <li><Link>Github</Link></li>
+            &nbsp;
+            &nbsp;
+            <li><Link>Contact</Link></li>
           </ul>
         </nav>
       </header>

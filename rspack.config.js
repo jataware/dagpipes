@@ -19,6 +19,10 @@ module.exports = {
 				type: "asset"
 			},
       {
+				test: /\.png$/,
+				type: "asset"
+			},
+      {
         test: /\.js$/,
         type: 'jsx',
       },
@@ -48,7 +52,7 @@ module.exports = {
     },
     react: {
       development: true,
-      refresh: true
+      refresh: false
     },
   },
 };
