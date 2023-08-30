@@ -6,6 +6,8 @@ import random from 'lodash/random';
 
 import PngLogo from "./assets/DAG|PIPES.png";
 
+import { useSelector } from 'react-redux';
+
 const Link = ({children}) => {
   return (
     <a href="/"
@@ -29,6 +31,8 @@ const Link = ({children}) => {
 };
 
 const GridLayout = ({children}) => {
+
+  const nodeCount = useSelector((state) => state.dag.nodeCount);
 
   const size = random(200, 440),
         x = random(-50, 0),
@@ -74,7 +78,7 @@ const GridLayout = ({children}) => {
       </aside>
 
       <footer>
-        Loading...
+        {nodeCount} nodes.
       </footer>
 
     </div>

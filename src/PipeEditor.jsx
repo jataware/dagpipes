@@ -9,12 +9,17 @@ import ReactFlow, {
   useEdgesState,
 } from 'reactflow';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { decrementNodeCount, incrementNodeCount } from './dagSlice';
+
 import { nodes as initialNodes, edges as initialEdges } from './initial-elements';
 import CustomNode from './CustomNode';
 import DragBar from './DragBar';
 
 import './overview.css';
 import './updatenode.scss';
+
+import { data, operations, scenarios } from './constants';
 
 const nodeTypes = {
   custom: CustomNode,
@@ -24,22 +29,37 @@ const minimapStyle = {
   height: 120,
 };
 
-// Shared among OverviewFlow instances,
-// 1 in our app, but needs to be a ref if OverviewFlow is reused
-let id = 1;
-const getId = () => `n_${id++}`;
-
-
-const typeStyles = {
+const nodeTypeStyles = {
   input: {
-      borderColor: 'green'
+    borderColor: 'green'
   },
   output: {
     borderColor: 'blue'
   },
-  default: {
+  operation: {
   }
 };
+
+// Shared among OverviewFlow instances,
+// 1 in our app, but needs to be a ref if OverviewFlow is reused
+let _idCounter = 1;
+const genId = () => `n_${_idCounter++}`;
+
+const genNode = (type, position) => {
+  const style = nodeTypeStyles[type];
+  const id = genId();
+  const label = `${id.replace('n_', '')} ${type}`;
+  const input = '';
+
+  return {
+    id,
+    type,
+    style,
+    position,
+    data: { label, input },
+  };
+};
+
 
 const OverviewFlow = () => {
 
@@ -51,6 +71,9 @@ const OverviewFlow = () => {
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [nodeLabel, setNodeLabel] = useState('');
   const [nodeInput, setNodeInput] = useState('');
+
+  // const nodeCount = useSelector((state) => state.dag.nodeCount);
+  const dispatch = useDispatch();
 
   const setCurrentNode = (event, nodeEl) => {
 		const node = nodes.find((n) => n.id === nodeEl.id);
@@ -68,7 +91,7 @@ const OverviewFlow = () => {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   const onInit = (reactFlowInstance) => {
-    console.log('flow loaded:', reactFlowInstance);
+    console.log('Flow loaded:', reactFlowInstance);
     setReactFlowInstance(reactFlowInstance);
   };
 
@@ -82,9 +105,7 @@ const OverviewFlow = () => {
   useEffect(() => {
     setNodes((nds) =>
       nds.map((node) => {
-        console.log(node.id, selectedNodeId);
         if (node.id === selectedNodeId) {
-          console.log('found node id selected to update, updating');
           node.data = {
             ...node.data,
             label: nodeLabel,
@@ -118,8 +139,7 @@ const OverviewFlow = () => {
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
 
-      // check if the dropped element is valid
-      if (typeof type === 'undefined' || !type) {
+      if (!type) {
         return;
       }
 
@@ -128,23 +148,14 @@ const OverviewFlow = () => {
         y: event.clientY - reactFlowBounds.top,
       });
 
-      const style = typeStyles[type];
-      const id = getId();
-      const label = `${type} node #${id.replace('n_', '')}`;
-      const input = '';
+      const newNode = genNode(type, position);
+      const { id, data: {label, input} } = newNode;
 
-      const newNode = {
-        id,
-        type,
-        style,
-        position,
-        data: { label, input },
-      };
-
+      setNodes((nds) => nds.concat(newNode));
+      dispatch(incrementNodeCount());
       setSelectedNodeId(id);
       setNodeLabel(label);
       setNodeInput(input);
-      setNodes((nds) => nds.concat(newNode));
     },
     [reactFlowInstance]
   );
@@ -172,6 +183,7 @@ const OverviewFlow = () => {
             edges={edgesWithUpdatedTypes}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
+            onNodesDelete={() => dispatch(decrementNodeCount())}
             onNodeClick={setCurrentNode}
             onPaneClick={clearCurrentNode}
             onConnect={onConnect}
