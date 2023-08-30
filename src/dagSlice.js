@@ -3,6 +3,11 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   nodeCount: 0,
   edgeCount: 0,
+  selectedNodeId: null,
+  selectedNodeType: null,
+  selectedNodeLabel: null,
+  selectedNodeInput: null,
+  selectedNodeOperation: null,
 };
 
 
@@ -30,9 +35,30 @@ export const dagSlice = createSlice({
     decrementEdgeCount: (state) => {
       state.edgeCount -= 1;
     },
-    // incrementByAmount: (state, action) => {
-    //   state.value += action.payload
-    // },
+    selectNode: (state, action) => {
+      const { id, type, data: {label, input, operation} } = action.payload;
+      state.selectedNodeId = id;
+      state.selectedNodeType = type;
+      state.selectedNodeLabel = label;
+      state.selectedNodeInput = input;
+      state.selectedNodeOperation = operation;
+    },
+    unselectNodes: (state) => {
+      state.selectedNodeId = null;
+      state.selectedNodeType = null;
+      state.selectedNodeLabel = null;
+      state.selectedNodeInput = null;
+      state.selectedNodeOperation = null;
+    },
+    setSelectedNodeLabel: (state, action) => {
+      state.selectedNodeLabel = action.payload;
+    },
+    setSelectedNodeInput: (state, action) => {
+      state.selectedNodeInput = action.payload;
+    },
+    setSelectedNodeOperation: (state, action) => {
+      state.selectedNodeOperation = action.payload;
+    },
   },
 });
 
@@ -42,7 +68,13 @@ export const {
   incrementNodeCount,
   incrementEdgeCount,
   decrementNodeCount,
-  decrementEdgeCount
+  decrementEdgeCount,
+  selectNode,
+  unselectNodes,
+  setSelectedNodeInput,
+  setSelectedNodeLabel,
+  // setSelectedNodeType,
+  setSelectedNodeOperation
 } = dagSlice.actions;
 
 export default dagSlice.reducer;

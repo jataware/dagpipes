@@ -1,5 +1,5 @@
 
-const data = [
+export const data = [
   'pr (precipitation)',
   'tas (mean surface air temperature)',
   'tasmax (max surface air temperature)',
@@ -7,14 +7,14 @@ const data = [
   'land use'
 ];
 
-const scenarios = [
+export const scenarios = [
   'ssp126',
   'ssp245',
   'ssp370',
   'ssp585'
 ];
 
-const operations = [
+export const operations = [
   'load', // no inputs. setting is what data to load
   'threshold', // 1 input. setting is threshold value (number), and threshold type (one of greater_than, greater_than_or_equal, less_than, less_than_or_equal, equal, not_equal)
   'multiply', // : 2 inputs, no settings

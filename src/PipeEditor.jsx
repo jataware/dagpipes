@@ -8,16 +8,23 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
 } from 'reactflow';
+import capitalize from 'lodash/capitalize';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { decrementNodeCount, incrementNodeCount } from './dagSlice';
+import { decrementNodeCount, incrementNodeCount,
+         selectNode,
+         unselectNodes,
+         setSelectedNodeLabel,
+         setSelectedNodeInput
+       } from './dagSlice';
 
 import { nodes as initialNodes, edges as initialEdges } from './initial-elements';
 import CustomNode from './CustomNode';
 import DragBar from './DragBar';
+import NodePropertyEditor from './NodePropertyEditor';
+
 
 import './overview.css';
-import './updatenode.scss';
 
 import { data, operations, scenarios } from './constants';
 
@@ -36,19 +43,22 @@ const nodeTypeStyles = {
   output: {
     borderColor: 'blue'
   },
-  operation: {
-  }
+  default: {}
 };
 
 // Shared among OverviewFlow instances,
 // 1 in our app, but needs to be a ref if OverviewFlow is reused
 let _idCounter = 1;
+let _edgeIdCounter = 1;
 const genId = () => `n_${_idCounter++}`;
+
+const genEdgeId = () => `e_${_edgeIdCounter++}`;
 
 const genNode = (type, position) => {
   const style = nodeTypeStyles[type];
   const id = genId();
-  const label = `${id.replace('n_', '')} ${type}`;
+  const typeLabel = type === 'default' ? 'Operation' : capitalize(type);
+  const label = `${typeLabel}`;
   const input = '';
 
   return {
@@ -68,25 +78,22 @@ const OverviewFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const [selectedNodeId, setSelectedNodeId] = useState(null);
-  const [nodeLabel, setNodeLabel] = useState('');
-  const [nodeInput, setNodeInput] = useState('');
+  const connectingNodeId = useRef(null);
 
-  // const nodeCount = useSelector((state) => state.dag.nodeCount);
+  const onConnectStart = useCallback((_, { nodeId }) => {
+    connectingNodeId.current = nodeId;
+  }, []);
+
+  const {
+    selectedNodeId, selectedNodeOperation,
+    selectedNodeLabel, selectedNodeInput
+  } = useSelector((state) => state.dag);
   const dispatch = useDispatch();
 
   const setCurrentNode = (event, nodeEl) => {
 		const node = nodes.find((n) => n.id === nodeEl.id);
-    setNodeLabel(node.data.label);
-    setNodeInput(node.data.input);
-		setSelectedNodeId(node.id);
+    dispatch(selectNode(node));
 	};
-
-  function clearCurrentNode(event) {
-    setNodeLabel('');
-    setNodeInput('');
-    setSelectedNodeId(null);
-  };
 
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
@@ -108,14 +115,14 @@ const OverviewFlow = () => {
         if (node.id === selectedNodeId) {
           node.data = {
             ...node.data,
-            label: nodeLabel,
+            label: selectedNodeLabel,
           };
         }
 
         return node;
       })
     );
-  }, [nodeLabel, setNodes]);
+  }, [selectedNodeLabel, setNodes]);
 
   useEffect(() => {
     setNodes((nds) =>
@@ -123,14 +130,29 @@ const OverviewFlow = () => {
         if (node.id === selectedNodeId) {
           node.data = {
             ...node.data,
-            input: nodeInput,
+            input: selectedNodeInput,
           };
         }
 
         return node;
       })
     );
-  }, [nodeInput, setNodes]);
+  }, [selectedNodeInput, setNodes]);
+
+  useEffect(() => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === selectedNodeId) {
+          node.data = {
+            ...node.data,
+            operation: selectedNodeOperation,
+          };
+        }
+
+        return node;
+      })
+    );
+  }, [selectedNodeOperation, setNodes]);
 
   const onDrop = useCallback(
     (event) => {
@@ -149,17 +171,40 @@ const OverviewFlow = () => {
       });
 
       const newNode = genNode(type, position);
-      const { id, data: {label, input} } = newNode;
+      const { id } = newNode;
 
       setNodes((nds) => nds.concat(newNode));
       dispatch(incrementNodeCount());
-      setSelectedNodeId(id);
-      setNodeLabel(label);
-      setNodeInput(input);
+      dispatch(selectNode(newNode));
     },
     [reactFlowInstance]
   );
 
+  const onConnectEnd = useCallback(
+    (event) => {
+      const targetIsPane = event.target.classList.contains('react-flow__pane');
+
+      if (targetIsPane) {
+        // we need to remove the wrapper bounds, in order to get the correct position
+        const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
+        const position = reactFlowInstance.project({ x: event.clientX - left - 75, y: event.clientY - top });
+        const newNode = genNode('default', position);
+        const { id } = newNode;
+
+        setNodes((nds) => nds.concat(newNode));
+        setEdges((eds) => eds.concat({
+          id: genEdgeId(),
+          source: connectingNodeId.current,
+          target: id
+        }));
+        dispatch(incrementNodeCount());
+        dispatch(selectNode(newNode));
+      }
+    },
+    [reactFlowInstance]
+  );
+
+  // NOTE This is used for custom node/edges. Not that important
   // we are using a bit of a shortcut here to adjust the edge type
   // this could also be done with a custom edge for example
   const edgesWithUpdatedTypes = edges.map((edge) => {
@@ -185,8 +230,10 @@ const OverviewFlow = () => {
             onEdgesChange={onEdgesChange}
             onNodesDelete={() => dispatch(decrementNodeCount())}
             onNodeClick={setCurrentNode}
-            onPaneClick={clearCurrentNode}
+            onPaneClick={() => dispatch(unselectNodes())}
             onConnect={onConnect}
+            onConnectStart={onConnectStart}
+            onConnectEnd={onConnectEnd}
             onInit={onInit}
             fitView
             snapToGrid
@@ -206,23 +253,7 @@ const OverviewFlow = () => {
             />
 
             {selectedNodeId && (
-              <div className="updatenode__controls">
-                <label>
-                  Label:
-                </label>
-                <input
-                  value={nodeLabel}
-                  onChange={(evt) => setNodeLabel(evt.target.value)}
-                />
-
-                <label className="updatenode__input">
-                  Input:
-                </label>
-                <input
-                  value={nodeInput}
-                  onChange={(evt) => setNodeInput(evt.target.value)}
-                />
-              </div>
+              <NodePropertyEditor />
             )}
 
           </ReactFlow>

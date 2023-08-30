@@ -8,6 +8,8 @@ import PngLogo from "./assets/DAG|PIPES.png";
 
 import { useSelector } from 'react-redux';
 
+import { scenarios } from './constants';
+
 const Link = ({children}) => {
   return (
     <a href="/"
@@ -74,7 +76,21 @@ const GridLayout = ({children}) => {
 
       <aside>
         <h3>Settings</h3>
-        <p>...</p>
+        <h5 className={css`color: gray;`}>Scenarios</h5>
+        <ul>
+          {scenarios.map((text) => (
+            <div key={text}>
+              <input
+                type="checkbox"
+                id={text}
+                name={text}
+              />
+              <label htmlFor={text}>
+                {text}
+              </label>
+            </div>
+          ))}
+        </ul>
       </aside>
 
       <footer>
