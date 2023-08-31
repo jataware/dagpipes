@@ -6,7 +6,9 @@ import random from 'lodash/random';
 
 import PngLogo from "./assets/DAG|PIPES.png";
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { setEdgeType } from './dagSlice';
 
 import { scenarios } from './constants';
 
@@ -14,7 +16,6 @@ const Link = ({children}) => {
   return (
     <a href="/"
        className={css`
-         color: #ac46a9;
          text-decoration: none;
          font-weight: bold;
          padding: 0.5rem;
@@ -22,7 +23,7 @@ const Link = ({children}) => {
 
         &:hover {
            opacity: 0.8;
-           background: #EEE;
+           background: #EEEEEE55;
            border-bottom: 1px solid #ac46a950;
         }
        `
@@ -32,10 +33,54 @@ const Link = ({children}) => {
   );
 };
 
+// TODO move edge type selector THINGS to separate file
+const edgeTypeOptions = [
+  {
+    value: 'smoothstep',
+    label: 'Smoothstep',
+  },
+  {
+    value: 'step',
+    label: 'Step',
+  },
+  {
+    value: 'default',
+    label: 'Bezier (default)',
+  },
+  {
+    value: 'straight',
+    label: 'Straight',
+  },
+];
+
+const EdgeTypeSelector = (props) => {
+  const dispatch = useDispatch();
+
+  const { edgeType } = useSelector((state) => state.dag);
+
+  return (
+    <select
+      value={edgeType}
+      onChange={(e) => {dispatch(setEdgeType(e.target.value)); }}
+    >
+      {edgeTypeOptions.map((option) => (
+        <option
+          key={option.value}
+          value={option.value}
+        >
+          {option.label}
+        </option>
+      ))}
+    </select>
+  );
+};
+
+
 const GridLayout = ({children}) => {
 
   const nodeCount = useSelector((state) => state.dag.nodeCount);
 
+  // For Logo:
   const size = random(200, 440),
         x = random(-50, 0),
         y = random(-50, 0);
@@ -45,15 +90,17 @@ const GridLayout = ({children}) => {
 
       <header>
 
-        <div style={{
-             }}
-             className={clsx([css`
+        <div
+          className={clsx([
+            css`
                background-image: url(${PngLogo});
                cursor: pointer;
                background-position-x: ${x}px;
                background-position-y: ${y}px;
                background-size: ${size}px;
-             `, "logo"])}
+             `,
+            'logo'
+          ])}
         >
         </div>
 
@@ -75,8 +122,10 @@ const GridLayout = ({children}) => {
       </main>
 
       <aside>
-        <h3>Settings</h3>
-        <h5 className={css`color: gray;`}>Scenarios</h5>
+        <h3>Global</h3>
+        <h4 className={css`color: gray;`}>
+          Scenarios
+        </h4>
         <ul>
           {scenarios.map((text) => (
             <div key={text}>
@@ -91,6 +140,10 @@ const GridLayout = ({children}) => {
             </div>
           ))}
         </ul>
+        <h4 className={css`color: gray;`}>
+          Edge Type
+        </h4>
+        <EdgeTypeSelector />
       </aside>
 
       <footer>

@@ -8,7 +8,6 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
 } from 'reactflow';
-import capitalize from 'lodash/capitalize';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { decrementNodeCount, incrementNodeCount,
@@ -19,17 +18,28 @@ import { decrementNodeCount, incrementNodeCount,
        } from './dagSlice';
 
 import { nodes as initialNodes, edges as initialEdges } from './initial-elements';
-import CustomNode from './CustomNode';
+
+import LoadNode from './LoadNode';
+import SaveNode from './SaveNode';
+import MultiplyNode from './MultiplyNode';
+import ThresholdNode from './ThresholdNode';
+import CountrySplitNode from './CountrySplitNode';
+import SumNode from './SumNode';
+
 import DragBar from './DragBar';
 import NodePropertyEditor from './NodePropertyEditor';
-
 
 import './overview.css';
 
 import { data, operations, scenarios } from './constants';
 
 const nodeTypes = {
-  custom: CustomNode,
+  load: LoadNode,
+  save: SaveNode,
+  multiply: MultiplyNode,
+  threshold: ThresholdNode,
+  country_split: CountrySplitNode,
+  sum: SumNode,
 };
 
 const minimapStyle = {
@@ -46,6 +56,12 @@ const nodeTypeStyles = {
   default: {}
 };
 
+const nodeTypeLabels = {
+  input: 'Load',
+  default: 'Operation',
+  output: 'Save',
+};
+
 // Shared among OverviewFlow instances,
 // 1 in our app, but needs to be a ref if OverviewFlow is reused
 let _idCounter = 1;
@@ -57,7 +73,7 @@ const genEdgeId = () => `e_${_edgeIdCounter++}`;
 const genNode = (type, position) => {
   const style = nodeTypeStyles[type];
   const id = genId();
-  const typeLabel = type === 'default' ? 'Operation' : capitalize(type);
+  const typeLabel = nodeTypeLabels[type];
   const label = `${typeLabel}`;
   const input = '';
 
@@ -86,8 +102,10 @@ const OverviewFlow = () => {
 
   const {
     selectedNodeId, selectedNodeOperation,
-    selectedNodeLabel, selectedNodeInput
+    selectedNodeLabel, selectedNodeInput,
+    edgeType
   } = useSelector((state) => state.dag);
+
   const dispatch = useDispatch();
 
   const setCurrentNode = (event, nodeEl) => {
@@ -102,7 +120,11 @@ const OverviewFlow = () => {
     setReactFlowInstance(reactFlowInstance);
   };
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
+  const onConnect = useCallback((params) => {
+    return setEdges((eds) => {
+      return addEdge(params, eds);
+    });
+  }, []);
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -158,20 +180,19 @@ const OverviewFlow = () => {
     (event) => {
       event.preventDefault();
 
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
 
       if (!type) {
         return;
       }
 
+      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const position = reactFlowInstance.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
 
       const newNode = genNode(type, position);
-      const { id } = newNode;
 
       setNodes((nds) => nds.concat(newNode));
       dispatch(incrementNodeCount());
@@ -180,39 +201,33 @@ const OverviewFlow = () => {
     [reactFlowInstance]
   );
 
-  const onConnectEnd = useCallback(
-    (event) => {
-      const targetIsPane = event.target.classList.contains('react-flow__pane');
+  // TODO likely remove this...
+  // const onConnectEnd = useCallback(
+  //   (event) => {
+  //     const targetIsPane = event.target.classList.contains('react-flow__pane');
 
-      if (targetIsPane) {
-        // we need to remove the wrapper bounds, in order to get the correct position
-        const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
-        const position = reactFlowInstance.project({ x: event.clientX - left - 75, y: event.clientY - top });
-        const newNode = genNode('default', position);
-        const { id } = newNode;
+  //     if (targetIsPane) {
+  //       // we need to remove the wrapper bounds, in order to get the correct position
+  //       const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
+  //       const position = reactFlowInstance.project({ x: event.clientX - left - 75, y: event.clientY - top });
+  //       const newNode = genNode('default', position);
+  //       const { id } = newNode;
 
-        setNodes((nds) => nds.concat(newNode));
-        setEdges((eds) => eds.concat({
-          id: genEdgeId(),
-          source: connectingNodeId.current,
-          target: id
-        }));
-        dispatch(incrementNodeCount());
-        dispatch(selectNode(newNode));
-      }
-    },
-    [reactFlowInstance]
-  );
+  //       setNodes((nds) => nds.concat(newNode));
+  //       setEdges((eds) => eds.concat({
+  //         id: genEdgeId(),
+  //         source: connectingNodeId.current,
+  //         target: id
+  //       }));
+  //       dispatch(incrementNodeCount());
+  //       dispatch(selectNode(newNode));
+  //     }
+  //   },
+  //   [reactFlowInstance]
+  // );
 
-  // NOTE This is used for custom node/edges. Not that important
-  // we are using a bit of a shortcut here to adjust the edge type
-  // this could also be done with a custom edge for example
   const edgesWithUpdatedTypes = edges.map((edge) => {
-    if (edge.sourceHandle) {
-      const edgeType = nodes.find((node) => node.type === 'custom').data.selects[edge.sourceHandle];
-      edge.type = edgeType;
-    }
-
+    edge.type = edgeType;
     return edge;
   });
 
@@ -233,7 +248,6 @@ const OverviewFlow = () => {
             onPaneClick={() => dispatch(unselectNodes())}
             onConnect={onConnect}
             onConnectStart={onConnectStart}
-            onConnectEnd={onConnectEnd}
             onInit={onInit}
             fitView
             snapToGrid

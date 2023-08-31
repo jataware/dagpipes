@@ -8,6 +8,7 @@ const initialState = {
   selectedNodeLabel: null,
   selectedNodeInput: null,
   selectedNodeOperation: null,
+  edgeType: 'default'
 };
 
 
@@ -59,6 +60,9 @@ export const dagSlice = createSlice({
     setSelectedNodeOperation: (state, action) => {
       state.selectedNodeOperation = action.payload;
     },
+    setEdgeType: (state, action) => {
+      state.edgeType = action.payload;
+    }
   },
 });
 
@@ -74,7 +78,8 @@ export const {
   setSelectedNodeInput,
   setSelectedNodeLabel,
   // setSelectedNodeType,
-  setSelectedNodeOperation
+  setSelectedNodeOperation,
+  setEdgeType
 } = dagSlice.actions;
 
 export default dagSlice.reducer;

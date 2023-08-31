@@ -13,28 +13,60 @@ export default () => {
 
       <section>
 
-        <p>Drag:</p>
-
         <div
           className="dndnode input"
-          onDragStart={(event) => onDragStart(event, 'input')}
+          onDragStart={(event) => onDragStart(event, 'load')}
           draggable
         >
-          Input
+          Load
         </div>
+
+        {/* <div */}
+        {/*   className="dndnode" */}
+        {/*   onDragStart={(event) => onDragStart(event, 'default')} */}
+        {/*   draggable */}
+        {/* > */}
+        {/*   Operation */}
+        {/* </div> */}
+
         <div
           className="dndnode"
-          onDragStart={(event) => onDragStart(event, 'default')}
+          onDragStart={(event) => onDragStart(event, 'threshold')}
           draggable
         >
-          Operation
+          Threshold
         </div>
+
+        <div
+          className="dndnode"
+          onDragStart={(event) => onDragStart(event, 'multiply')}
+          draggable
+        >
+          Multiply
+        </div>
+
+        <div
+          className="dndnode"
+          onDragStart={(event) => onDragStart(event, 'country_split')}
+          draggable
+        >
+          Country Split
+        </div>
+
+        <div
+          className="dndnode"
+          onDragStart={(event) => onDragStart(event, 'sum')}
+          draggable
+        >
+          Sum
+        </div>
+
         <div
           className="dndnode output"
-          onDragStart={(event) => onDragStart(event, 'output')}
+          onDragStart={(event) => onDragStart(event, 'save')}
           draggable
         >
-          Output
+          Save
         </div>
       </section>
 
