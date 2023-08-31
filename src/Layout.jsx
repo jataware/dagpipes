@@ -5,26 +5,31 @@ import clsx from 'clsx';
 import random from 'lodash/random';
 
 import PngLogo from "./assets/DAG|PIPES.png";
+import HomeIcon from '@mui/icons-material/Home';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import MailIcon from '@mui/icons-material/MailOutline';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setEdgeType } from './dagSlice';
+import ScenarioSelection from './ScenarioSelection';
 
-import { scenarios } from './constants';
+import { setEdgeType } from './dagSlice';
 
 const Link = ({children}) => {
   return (
     <a href="/"
        className={css`
+         color: white;
          text-decoration: none;
-         font-weight: bold;
+         /* font-weight: bold; */
          padding: 0.5rem;
-         border-radius: 6px;
+         border-radius: 4px;
+display: flex;
+align-items: center;
+justify-content: center;
 
         &:hover {
-           opacity: 0.8;
-           background: #EEEEEE55;
-           border-bottom: 1px solid #ac46a950;
+           background: #DDDDDD30;
         }
        `
        }>
@@ -88,7 +93,9 @@ const GridLayout = ({children}) => {
   return (
     <div className="container">
 
-      <header>
+      <header className={css`
+       }
+      `}>
 
         <div
           className={clsx([
@@ -106,13 +113,22 @@ const GridLayout = ({children}) => {
 
         <nav>
           <ul>
-            <li><Link>Home</Link></li>
+            <li><Link>
+                  <HomeIcon />&nbsp;&nbsp;Home
+                </Link>
+            </li>
             &nbsp;
             &nbsp;
-            <li><Link>Github</Link></li>
+            &nbsp;
+            <li><Link>
+                  <GitHubIcon />&nbsp;&nbsp;Github
+                </Link></li>
             &nbsp;
             &nbsp;
-            <li><Link>Contact</Link></li>
+            &nbsp;
+            <li><Link>
+                  <MailIcon />&nbsp;&nbsp;Contact
+                </Link></li>
           </ul>
         </nav>
       </header>
@@ -121,32 +137,23 @@ const GridLayout = ({children}) => {
         {children}
       </main>
 
-      <aside>
+      <aside className={css`background: white;`}>
         <h3>Global</h3>
         <h4 className={css`color: gray;`}>
           Scenarios
         </h4>
-        <ul>
-          {scenarios.map((text) => (
-            <div key={text}>
-              <input
-                type="checkbox"
-                id={text}
-                name={text}
-              />
-              <label htmlFor={text}>
-                {text}
-              </label>
-            </div>
-          ))}
-        </ul>
+
+        <div className={css`display:flex; flex-direction: column; align-items: center;`}>
+          <ScenarioSelection />
+        </div>
+
         <h4 className={css`color: gray;`}>
           Edge Type
         </h4>
         <EdgeTypeSelector />
       </aside>
 
-      <footer>
+      <footer className={css`background: white;`}>
         {nodeCount} nodes.
       </footer>
 

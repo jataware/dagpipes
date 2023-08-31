@@ -1,5 +1,6 @@
 .container {
   display: grid;
+  background-color: #eee;
 
   grid-template-areas:
     "header header header"
@@ -14,17 +15,19 @@
 }
 
 header {
+  font-weight: bold;
   padding: 0.2rem 2rem;
   grid-area: header;
-  border: 1px dashed blue;
   display: flex;
   align-items: center;
+
+  background-color: #292929;
+  box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(0,0,0,.4);
 }
 
 .logo {
   height: 2.5rem;
   width: 2.5rem;
-  marging: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,7 +35,7 @@ header {
   padding: 0.5rem;
 
   background-repeat: no-repeat;
-  border: 3px solid #A9a9a9;
+  border: 3px solid #e91e1e52;
 }
 
 ul {
@@ -57,19 +60,28 @@ nav {
 
 main {
   grid-area: main;
-  border: 1px dashed gray;
   position: relative;
+  background: #fff;
+  border-radius: 6px;
+  color: rgba(0,0,0,.87);
+  border: 1px solid #e5e5e5ad;
+
+  margin-left: 0.5rem;
 }
 
 aside {
   grid-area: aside;
   margin-right: 0.5rem;
-  border: 1px dashed orange;
+
+  background: #fff;
+  border-radius: 6px;
+  color: rgba(0,0,0,.87);
+  border: 1px solid #e5e5e5ad;
 }
 
 footer {
   grid-area: footer;
-  border: 1px dashed green;
+  // border: 1px dashed green;
   padding: 1rem;
 }
 

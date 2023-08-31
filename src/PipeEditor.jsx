@@ -7,6 +7,7 @@ import ReactFlow, {
   Background,
   useNodesState,
   useEdgesState,
+  Panel
 } from 'reactflow';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -267,12 +268,16 @@ const OverviewFlow = () => {
             />
 
             {selectedNodeId && (
-              <NodePropertyEditor />
+              <Panel position="top-right" style={{background: 'white'}}>
+                <NodePropertyEditor />
+              </Panel>
             )}
 
           </ReactFlow>
         </div>
-        <DragBar />
+        <Panel position="bottom-center">
+          <DragBar />
+        </Panel>
       </ReactFlowProvider>
     </div>
   );

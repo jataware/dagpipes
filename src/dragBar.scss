@@ -1,33 +1,26 @@
 
+.react-flow__panel.center {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+}
+
 .sidebar {
-  // bottom: 0;
-  width: 60%;
-
-  border: 1px dashed purple;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-self: center;
+  width: 100%;
   margin: auto;
 
   section {
 
     flex: 1;
     margin: auto;
-    display: flex;
-    justify-content: space-evenly;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 1rem;
 
     .dndnode {
-
-      padding: 0.5rem;
-      border: 1px solid #1a192b;
-
-      border-radius: 2px;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      max-width: 200px;
+      background: white;
       cursor: grab;
     }
   }
@@ -35,9 +28,5 @@
 
 
 .sidebar .dndnode.input {
-  border-color: #0041d0;
-}
-
-.sidebar .dndnode.output {
-  border-color: #ff0072;
+  font-size: 10px;
 }

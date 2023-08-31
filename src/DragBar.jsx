@@ -1,6 +1,9 @@
 import React from 'react';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import Button from '@mui/material/Button';
 
 import './dragBar.scss';
+
 
 export default () => {
   const onDragStart = (event, nodeType) => {
@@ -13,61 +16,74 @@ export default () => {
 
       <section>
 
-        <div
+        <Button
+          color="success"
+          variant="outlined"
+          startIcon={<DragIndicatorIcon />}
           className="dndnode input"
-          onDragStart={(event) => onDragStart(event, 'load')}
+          disableRipple
+          onDragStart={(event) => {return onDragStart(event, 'load');}}
           draggable
         >
           Load
-        </div>
+        </Button>
 
-        {/* <div */}
-        {/*   className="dndnode" */}
-        {/*   onDragStart={(event) => onDragStart(event, 'default')} */}
-        {/*   draggable */}
-        {/* > */}
-        {/*   Operation */}
-        {/* </div> */}
-
-        <div
-          className="dndnode"
-          onDragStart={(event) => onDragStart(event, 'threshold')}
+        <Button
+          variant="outlined"
+          startIcon={<DragIndicatorIcon />}
+          className="dndnode input"
+          disableRipple
+          onDragStart={(event) => {return onDragStart(event, 'threshold');}}
           draggable
         >
           Threshold
-        </div>
+        </Button>
 
-        <div
-          className="dndnode"
-          onDragStart={(event) => onDragStart(event, 'multiply')}
+        <Button
+          variant="outlined"
+          startIcon={<DragIndicatorIcon />}
+          className="dndnode input"
+          disableRipple
+          onDragStart={(event) => {return onDragStart(event, 'multiply');}}
           draggable
         >
           Multiply
-        </div>
+        </Button>
 
-        <div
-          className="dndnode"
-          onDragStart={(event) => onDragStart(event, 'country_split')}
+        <Button
+          variant="outlined"
+          startIcon={<DragIndicatorIcon />}
+          className="dndnode input"
+          disableRipple
+          onDragStart={(event) => {return onDragStart(event, 'country_split');}}
           draggable
         >
           Country Split
-        </div>
+        </Button>
 
-        <div
-          className="dndnode"
-          onDragStart={(event) => onDragStart(event, 'sum')}
+        <Button
+          variant="outlined"
+          startIcon={<DragIndicatorIcon />}
+          className="dndnode input"
+          disableRipple
+          onDragStart={(event) => {return onDragStart(event, 'sum');}}
           draggable
         >
           Sum
-        </div>
+        </Button>
 
-        <div
-          className="dndnode output"
-          onDragStart={(event) => onDragStart(event, 'save')}
+        <Button
+          color="success"
+          variant="outlined"
+          startIcon={<DragIndicatorIcon />}
+          className="dndnode input"
+          disableRipple
+          onDragStart={(event) => {return onDragStart(event, 'save');}}
           draggable
         >
           Save
-        </div>
+        </Button>
+
       </section>
 
     </div>

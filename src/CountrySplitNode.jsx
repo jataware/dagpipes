@@ -2,10 +2,11 @@ import React, { memo } from 'react';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 import { css } from '@emotion/css';
 
+import AutoComplete from './Autocomplete';
 
-const data = ['China', 'India', 'United States', 'Canada', 'Mexico'];
+// const data = ['China', 'India', 'United States', 'Canada', 'Mexico'];
+// const options = data.map(i => ({value: i, label: i}));
 
-const options = data.map(i => ({value: i, label: i}));
 
 function Select({ value, handleId, nodeId }) {
 
@@ -26,18 +27,7 @@ width: 11px;
         id={handleId}
       />
       <div>Countries</div>
-      <select
-        className="nodrag"
-      >
-        {options.map((option) => (
-          <option
-            key={option.value}
-            value={option.value}
-          >
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <AutoComplete />
       <Handle
         className={css`
 bottom: -25px;
@@ -70,11 +60,12 @@ const bodyStyle = css`
          }
       `;
 
+// reduce by country => from re-gridded to country data
 function CustomNode({ id, data }) {
   return (
     <>
       <div className={headerStyle}>
-        <strong>Country Split</strong>
+        <strong>Reduce by Country</strong>
       </div>
       <div className={bodyStyle}>
         <Select

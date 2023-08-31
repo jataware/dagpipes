@@ -8,7 +8,8 @@ const initialState = {
   selectedNodeLabel: null,
   selectedNodeInput: null,
   selectedNodeOperation: null,
-  edgeType: 'default'
+  edgeType: 'default',
+  unsavedChanges: false
 };
 
 
@@ -17,24 +18,20 @@ export const dagSlice = createSlice({
   initialState,
   reducers: {
     incrementNodeCount: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
       state.nodeCount += 1;
+      state.unsavedChanges = true;
     },
     decrementNodeCount: (state) => {
       state.nodeCount -= 1;
+      state.unsavedChanges = true;
     },
     incrementEdgeCount: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
       state.edgeCount += 1;
+      state.unsavedChanges = true;
     },
     decrementEdgeCount: (state) => {
       state.edgeCount -= 1;
+      state.unsavedChanges = true;
     },
     selectNode: (state, action) => {
       const { id, type, data: {label, input, operation} } = action.payload;
@@ -77,7 +74,6 @@ export const {
   unselectNodes,
   setSelectedNodeInput,
   setSelectedNodeLabel,
-  // setSelectedNodeType,
   setSelectedNodeOperation,
   setEdgeType
 } = dagSlice.actions;

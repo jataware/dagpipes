@@ -2,10 +2,17 @@ import React, { memo } from 'react';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 import { css } from '@emotion/css';
 
+import { CheckboxLabels } from './ScenarioSelection';
 
 const data = ['lat', 'lon', 'time', 'country', 'scenario', 'realization'];
 
-const options = data.map(i => ({value: i, label: i}));
+// const options = data.map(i => ({value: i, label: i}));
+
+const checkboxContainerStyle = css`
+    display: flex;
+    flex-direction: row;
+    // font-size: 10px;
+`;
 
 function Select({ value, handleId, nodeId }) {
 
@@ -26,18 +33,10 @@ width: 11px;
         id={handleId}
       />
       <div>Dimension</div>
-      <select
-        className="nodrag"
-      >
-        {options.map((option) => (
-          <option
-            key={option.value}
-            value={option.value}
-          >
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <CheckboxLabels
+        labels={data}
+        className={checkboxContainerStyle}
+      />
       <Handle
         className={css`
 bottom: -25px;

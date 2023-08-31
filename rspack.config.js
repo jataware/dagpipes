@@ -23,6 +23,10 @@ module.exports = {
 				type: "asset"
 			},
       {
+				test: /\.jpg$/,
+				type: "asset"
+			},
+      {
         test: /\.js$/,
         type: 'jsx',
       },

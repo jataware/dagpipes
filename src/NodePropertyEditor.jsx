@@ -20,8 +20,9 @@ export default (props) => {
 
   const dispatch = useDispatch();
 
+  // style={{display: 'none'}}
   return (
-    <div className="updatenode__controls" style={{display: 'none'}}>
+    <div className="updatenode__controls">
 
       {/* <label> */}
       {/*   Label: */}
