@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react';
 import { css } from '@emotion/css';
 import clsx from 'clsx';
-import random from 'lodash/random';
-
 import PngLogo from "./assets/DAG|PIPES.png";
 import DojoLogo from "./assets/dojo_logo.svg";
 import HomeIcon from '@mui/icons-material/Home';
@@ -16,6 +14,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import ScenarioSelection from './ScenarioSelection';
 
 import { setEdgeType } from './dagSlice';
+import { graphEdgeTypes } from './constants';
+import capitalize from 'lodash/capitalize';
 
 const Link = ({children}) => {
   return (
@@ -23,7 +23,6 @@ const Link = ({children}) => {
        className={css`
          color: white;
          text-decoration: none;
-         /* font-weight: bold; */
          padding: 0.5rem;
          border-radius: 4px;
 display: flex;
@@ -40,25 +39,8 @@ justify-content: center;
   );
 };
 
-// TODO move edge type selector THINGS to separate file
-const edgeTypeOptions = [
-  {
-    value: 'smoothstep',
-    label: 'Smoothstep',
-  },
-  {
-    value: 'step',
-    label: 'Step',
-  },
-  {
-    value: 'default',
-    label: 'Bezier (default)',
-  },
-  {
-    value: 'straight',
-    label: 'Straight',
-  },
-];
+const edgeTypeOptions = graphEdgeTypes.map(t => ({value: t === 'bezier' ? 'default' : t, label: capitalize(t)}));
+
 
 const EdgeTypeSelector = (props) => {
   const dispatch = useDispatch();
@@ -96,11 +78,6 @@ const Footer = (props) => {
 
 const GridLayout = ({children}) => {
 
-  // For Logo:
-  // const size = random(200, 440),
-  //       x = random(-50, 0),
-  //       y = random(-50, 0);
-
   return (
     <div className="container">
 
@@ -109,15 +86,12 @@ const GridLayout = ({children}) => {
         <div
           className={clsx([
             css`
-               /* background-color: linear-gradient(60deg,#26c6da,#00acc1) */
                background-image: url(${DojoLogo});
                background-color: #26c6da;
                border-radius: 7px;
-               /* background-image: url(PngLogo); */
                cursor: pointer;
                background-position-x: -3px;
                background-position-y: -1px;
-               /* background-size: sizepx; */
                background-size: cover;
              `,
             'logo'

@@ -272,11 +272,11 @@ const OverviewFlow = () => {
               gap={16}
             />
 
-            {selectedNodeId && (
-              <Panel position="top-right" style={{background: 'white'}}>
-                <NodePropertyEditor />
-              </Panel>
-            )}
+            {/* selectedNodeId && ( */
+            /*   <Panel position="top-right" style={{background: 'white'}}> */
+            /*     <NodePropertyEditor /> */
+            /*   </Panel> */
+            /* ) */}
 
           </ReactFlow>
         </div>

@@ -21,6 +21,9 @@ function FileSelect({ input, handleId, nodeId, onChange }) {
         label="Filename"
         value={input}
         placeholder="output.nc"
+        InputLabelProps={{
+          shrink: true,
+        }}
         onChange={onChange.bind(this, nodeId)}
       />
     </div>

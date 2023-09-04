@@ -27,8 +27,6 @@ const Label = styled('label')`
 
 const InputWrapper = styled('div')(
   ({ theme }) => `
-
-  // width: 300px;
   border: 1px solid ${theme.palette.mode === 'dark' ? '#434343' : '#d9d9d9'};
   background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
   border-radius: 4px;
