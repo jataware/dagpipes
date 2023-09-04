@@ -7,6 +7,8 @@ export const data = [
   'land cover' // use
 ];
 
+export const dimensions = ['lat', 'lon', 'time', 'country', 'scenario', 'realization'];
+
 export const scenarios = [
   'ssp126',
   'ssp245',

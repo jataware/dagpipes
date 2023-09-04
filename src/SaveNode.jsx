@@ -33,12 +33,7 @@ const headerStyle = css`
       `;
 
 const bodyStyle = css`
-         padding: 0.5rem;
-         select {
-           width: 100%;
-           margin-top: 5px;
-           font-size: 10px;
-         }
+         padding: 1rem;
       `;
 
 function CustomNode({ id, data }) {

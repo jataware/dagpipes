@@ -34,7 +34,7 @@ import NodePropertyEditor from './NodePropertyEditor';
 
 import './overview.css';
 
-import { data, operations, scenarios } from './constants';
+import { data, operations, scenarios, dimensions } from './constants';
 
 const nodeTypes = {
   load: LoadNode,
@@ -59,25 +59,29 @@ const nodeTypeStyles = {
   default: {}
 };
 
-
-// Shared among OverviewFlow instances,
-// 1 in our app, but needs to be a ref if OverviewFlow is reused
-// let _idCounter = 1;
-// let _edgeIdCounter = 1;
 const genId = () => `n_${window.crypto.randomUUID()}`;
-
-// const genEdgeId = () => `e_${window.crypto.randomUUID()}`;
+const genEdgeId = () => `e_${window.crypto.randomUUID()}`;
 
 const genNode = (type, position) => {
   const style = nodeTypeStyles[type];
   const id = genId();
 
-  let input = ''; // set default value per type
+  let input; // set default value per type
 
   switch(type) {
     case 'load':
       input = 'pr';
-    break;
+      break;
+    case 'save':
+      input = '';
+      break;
+    case 'sum':
+      // checkboxes all unchecked by default
+      input = [];
+      dimensions.forEach(label => {
+        input[label] = false;
+      });
+      break;
   }
 
   return {
@@ -96,12 +100,6 @@ const OverviewFlow = () => {
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-  const connectingNodeId = useRef(null);
-
-  const onConnectStart = useCallback((_, { nodeId }) => {
-    connectingNodeId.current = nodeId;
-  }, []);
 
   const {
     selectedNodeId, selectedNodeLabel, selectedNodeInput, edgeType
@@ -173,8 +171,15 @@ const OverviewFlow = () => {
           return node;
         }
 
-        // different properties depend on node 'type'..?
-        const input = event.target.value;
+        let input;
+
+        if (node.type === 'sum') {
+          const prevInput = {...node.data.input};
+          input = prevInput;
+          input[event.target.name] = event.target.checked;
+        } else {
+          input = event.target.value;
+        }
 
         return {
           ...node,
@@ -221,9 +226,16 @@ const OverviewFlow = () => {
   const onSave = useCallback(() => {
     if (reactFlowInstance) {
       const flow = reactFlowInstance.toObject();
-      console.log(JSON.stringify(flow, 2, null));
+
       window.localStorage.setItem('dagpipes-flow-session', JSON.stringify(flow));
       dispatch(setSavedChanges());
+
+      const forBackend = {...flow};
+      delete forBackend.viewport;
+
+      forBackend.edges = forBackend.edges.map(e => ({source: e.source, target: e.target, id: e.id}));
+      forBackend.nodes = forBackend.nodes.map(e => ({type: e.type, data: e.data, id: e.id}));
+      console.log(JSON.stringify(forBackend, 2, null));
     }
   }, [reactFlowInstance]);
 
@@ -263,7 +275,6 @@ const OverviewFlow = () => {
             onNodeClick={setCurrentNode}
             onPaneClick={() => dispatch(unselectNodes())}
             onConnect={onConnect}
-            onConnectStart={onConnectStart}
             onInit={onInit}
             fitView
             snapToGrid

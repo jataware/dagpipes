@@ -1,20 +1,19 @@
 import React, { memo } from 'react';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 import { css } from '@emotion/css';
+import { pink } from '@mui/material/colors';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import {dimensions} from './constants';
 
-import { CheckboxLabels } from './ScenarioSelection';
-
-const data = ['lat', 'lon', 'time', 'country', 'scenario', 'realization'];
-
-// const options = data.map(i => ({value: i, label: i}));
 
 const checkboxContainerStyle = css`
     display: flex;
     flex-direction: row;
-    // font-size: 10px;
 `;
 
-function Select({ value, handleId, nodeId }) {
+function Select({ input, handleId, nodeId, onChange }) {
 
   return (
     <div className={css`
@@ -22,30 +21,48 @@ function Select({ value, handleId, nodeId }) {
         margin-bottom: 10px;
     `}>
       <Handle
-        className={css`top: -56px;
-width: 11px;
-  height: 11px;
-  border-radius: 2px;
-  background-color: #778899;
-`}
+        className={css`
+           top: -56px;
+           width: 11px;
+           height: 11px;
+           border-radius: 2px;
+           background-color: #778899;
+        `}
         type="target"
         position={Position.Top}
         id={handleId}
       />
       <div>Dimension</div>
-      <CheckboxLabels
-        labels={data}
-        className={checkboxContainerStyle}
-      />
+
+      <FormGroup className={checkboxContainerStyle}>
+        {dimensions.map(label => (
+          <FormControlLabel
+            key={label}
+            control={<Checkbox
+                       onChange={onChange.bind(this, nodeId)}
+                       name={label}
+                       disableRipple
+                       checked={input[label]}
+                    sx={{
+                      color: pink[800],
+                      '&.Mui-checked': {
+                        color: pink[600],
+                      },
+                    }}
+           />}
+            label={label}
+          />
+        ))}
+      </FormGroup>
       <Handle
         className={css`
-bottom: -25px;
-  right: -15px;
-  width: 11px;
-  height: 11px;
-  border-radius: 2px;
-  background-color: #778899;
-`}
+          bottom: -25px;
+          right: -15px;
+          width: 11px;
+          height: 11px;
+          border-radius: 2px;
+          background-color: #778899;
+        `}
         type="source"
         position={Position.Bottom}
         id={handleId}
@@ -78,7 +95,8 @@ function CustomNode({ id, data }) {
       <div className={bodyStyle}>
         <Select
           nodeId={id}
-          value={data.input}
+          onChange={data.onChange}
+          input={data.input}
         />
       </div>
     </>
