@@ -36,12 +36,9 @@ export const dagSlice = createSlice({
       state.unsavedChanges = true;
     },
     selectNode: (state, action) => {
-      const { id, type // , data: {label, input}
-            } = action.payload;
+      const { id, type } = action.payload;
       state.selectedNodeId = id;
       state.selectedNodeType = type;
-      // state.selectedNodeLabel = label;
-      // state.selectedNodeInput = input;
     },
     unselectNodes: (state) => {
       state.selectedNodeId = null;

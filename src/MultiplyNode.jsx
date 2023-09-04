@@ -3,9 +3,8 @@ import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 import { css } from '@emotion/css';
 
 const headerStyle = css`
-         padding: 8px 10px;
-         border-bottom: 1px solid #e2e8f0;
-      `;
+    padding: 8px 10px;
+`;
 
 function CustomNode({ id, data }) {
   return (
