@@ -5,8 +5,14 @@ import { css } from '@emotion/css';
 import AutoComplete from './Autocomplete';
 
 
+/**
+ *
+ **/
+function Select({ input, handleId, nodeId, onChange }) {
 
-function Select({ value, handleId, nodeId }) {
+  const handleChange = (_, newValue) => {
+    onChange(nodeId, {target: {value: newValue }});
+  };
 
   return (
     <div className={css`
@@ -14,27 +20,31 @@ function Select({ value, handleId, nodeId }) {
         margin-bottom: 10px;
     `}>
       <Handle
-        className={css`top: -56px;
-width: 11px;
-  height: 11px;
-  border-radius: 2px;
-  background-color: #778899;
-`}
+        className={css`
+          top: -56px;
+          width: 11px;
+          height: 11px;
+          border-radius: 2px;
+          background-color: #778899;
+        `}
         type="target"
         position={Position.Top}
         id={handleId}
       />
       <div>Countries</div>
-      <AutoComplete />
+      <AutoComplete
+        value={input}
+        onChange={handleChange}
+      />
       <Handle
         className={css`
-bottom: -25px;
-  right: -15px;
-  width: 11px;
-  height: 11px;
-  border-radius: 2px;
-  background-color: #778899;
-`}
+          bottom: -25px;
+          right: -15px;
+          width: 11px;
+          height: 11px;
+          border-radius: 2px;
+          background-color: #778899;
+        `}
         type="source"
         position={Position.Bottom}
         id={handleId}
@@ -68,7 +78,8 @@ function CustomNode({ id, data }) {
       <div className={bodyStyle}>
         <Select
           nodeId={id}
-          value={data.input}
+          input={data.input}
+          onChange={data.onChange}
         />
       </div>
     </>

@@ -165,7 +165,8 @@ const Listbox = styled('ul')(
 `,
 );
 
-export default function CustomizedHook() {
+
+export default function CustomizedHook({value, onChange}) {
   const {
     getRootProps,
     getInputLabelProps,
@@ -174,22 +175,24 @@ export default function CustomizedHook() {
     getListboxProps,
     getOptionProps,
     groupedOptions,
-    value,
+    value: listValues,
     focused,
     setAnchorEl,
   } = useAutocomplete({
     id: 'customized-hook-demo',
     multiple: true,
-    options: countryList,
-    getOptionLabel: (option) => option.title,
+    options: countries,
+    getOptionLabel: (option) => option,
+    value,
+    onChange
   });
 
   return (
     <Root>
       <div {...getRootProps()}>
         <InputWrapper ref={setAnchorEl} className={clsx({'focused': focused, 'nodrag': true})}>
-          {value.map((option, index) => (
-            <StyledTag label={option.title} {...getTagProps({ index })} />
+          {listValues.map((option, index) => (
+            <StyledTag label={option} {...getTagProps({ index })} />
           ))}
           <input {...getInputProps()} />
         </InputWrapper>
@@ -198,7 +201,7 @@ export default function CustomizedHook() {
         <Listbox {...getListboxProps()} className="nodrag">
           {groupedOptions.map((option, index) => (
             <li {...getOptionProps({ option, index })}>
-              <span>{option.title}</span>
+              <span>{option}</span>
               <CheckIcon fontSize="small" />
             </li>
           ))}
@@ -208,4 +211,3 @@ export default function CustomizedHook() {
   );
 }
 
-const countryList = countries.map(i => ({title: i}));

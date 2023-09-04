@@ -59,44 +59,34 @@ const nodeTypeStyles = {
   default: {}
 };
 
-const genId = () => `n_${window.crypto.randomUUID()}`;
+const initialNodeTypeValues = {
+  load: 'pr',
+  save: '',
+  sum: (() => {
+    let acc = {};
+    dimensions.forEach(label => {
+      acc[label] = false;
+    });
+    return acc;
+  })(),
+  threshold: {
+    value: '',
+    type: threshold_ops[0]
+  },
+  country_split: []
+};
+
+const genNodeId = () => `n_${window.crypto.randomUUID()}`;
 const genEdgeId = () => `e_${window.crypto.randomUUID()}`;
 
 const genNode = (type, position) => {
-  const style = nodeTypeStyles[type];
-  const id = genId();
-
-  let input; // set default value per type
-
-  switch(type) {
-    case 'load':
-      input = 'pr';
-      break;
-    case 'save':
-      input = '';
-      break;
-    case 'sum':
-      // checkboxes all unchecked by default
-      input = [];
-      dimensions.forEach(label => {
-        input[label] = false;
-      });
-      break;
-    case 'threshold':
-      input = {
-        value: '',
-        type: threshold_ops[0]
-      };
-    break;
-
-  }
+  const id = genNodeId();
 
   return {
     id,
     type,
-    style,
     position,
-    data: { label: type, input, },
+    data: { label: type, input: initialNodeTypeValues[type] },
   };
 };
 
@@ -141,37 +131,9 @@ const OverviewFlow = () => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
-  // useEffect(() => {
-  //   setNodes((nds) =>
-  //     nds.map((node) => {
-  //       if (node.id === selectedNodeId) {
-  //         node.data = {
-  //           ...node.data,
-  //           label: selectedNodeLabel,
-  //         };
-  //       }
-
-  //       return node;
-  //     })
-  //   );
-  // }, [selectedNodeLabel, setNodes]);
-
-  // useEffect(() => {
-  //   setNodes((nds) =>
-  //     nds.map((node) => {
-  //       if (node.id === selectedNodeId) {
-  //         node.data = {
-  //           ...node.data,
-  //           input: selectedNodeInput,
-  //         };
-  //       }
-
-  //       return node;
-  //     })
-  //   );
-  // }, [selectedNodeInput, setNodes]);
-
+  // TODO cleanup
   const onNodeChange = (currNodeId, event) => {
+
     setNodes((nds) =>
       nds.map((node) => {
         if (node.id !== currNodeId) {
