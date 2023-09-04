@@ -16,7 +16,8 @@ import Button from '@mui/material/Button';
 import { useSelector, useDispatch } from 'react-redux';
 import { decrementNodeCount, incrementNodeCount,
          setNodeCount, selectNode, unselectNodes,
-         setSelectedNodeLabel, setSelectedNodeInput
+         setSelectedNodeLabel, setSelectedNodeInput,
+         setSavedChanges
        } from './dagSlice';
 
 import { nodes as initialNodes, edges as initialEdges } from './initial-elements';
@@ -222,6 +223,7 @@ const OverviewFlow = () => {
       const flow = reactFlowInstance.toObject();
       console.log(JSON.stringify(flow, 2, null));
       window.localStorage.setItem('dagpipes-flow-session', JSON.stringify(flow));
+      dispatch(setSavedChanges());
     }
   }, [reactFlowInstance]);
 
@@ -236,7 +238,7 @@ const OverviewFlow = () => {
         nodes.map(n => {n.data.onChange = onNodeChange; return n;});
         setNodes(nodes);
         setEdges(flow.edges || []);
-        setNodeCount(nodes.length);
+        dispatch(setNodeCount(nodes.length));
         // setViewport({ x, y, zoom }); // TODO
       }
     };

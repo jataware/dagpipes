@@ -2,10 +2,13 @@ import React, { memo } from 'react';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 import { css } from '@emotion/css';
 
+import TextField from '@mui/material/TextField';
+
 /**
  *
  **/
-function FileSelect({ value, handleId, nodeId }) {
+function FileSelect({ input, handleId, nodeId, onChange }) {
+
   return (
     <div className="custom-node__save">
       <Handle
@@ -13,11 +16,13 @@ function FileSelect({ value, handleId, nodeId }) {
         position={Position.Top}
         id={handleId}
       />
-      <label htmlFor="filename">Filename</label>
-      <input
+      <TextField
         className="nodrag"
+        label="Filename"
+        value={input}
         placeholder="output.nc"
-        id="filename" />
+        onChange={onChange.bind(this, nodeId)}
+      />
     </div>
   );
 }
@@ -45,7 +50,8 @@ function CustomNode({ id, data }) {
       <div className={bodyStyle}>
         <FileSelect
           nodeId={id}
-          value={data.input}
+          input={data.input}
+          onChange={data.onChange}
         />
       </div>
     </>

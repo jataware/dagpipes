@@ -83,11 +83,13 @@ const EdgeTypeSelector = (props) => {
 };
 
 const Footer = (props) => {
-  const nodeCount = useSelector((state) => state.dag.nodeCount);
+  const { nodeCount, unsavedChanges } = useSelector((state) => state.dag);
 
   return (
     <footer className={css`background: white;`}>
-      {nodeCount} nodes.
+      <div>
+        {nodeCount} nodes. {unsavedChanges && (<span>Unsaved Changes.</span>)}
+      </div>
     </footer>
   );
 };

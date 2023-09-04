@@ -59,7 +59,7 @@ const bodyStyle = css`
          }
       `;
 
-function CustomNode({ id, data, ...props }) {
+function CustomNode({ id, data }) {
 
   return (
     <>

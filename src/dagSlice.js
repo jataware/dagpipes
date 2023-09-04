@@ -57,6 +57,9 @@ export const dagSlice = createSlice({
     },
     setEdgeType: (state, action) => {
       state.edgeType = action.payload;
+    },
+    setSavedChanges: (state) => {
+      state.unsavedChanges = false;
     }
   },
 });
@@ -73,7 +76,8 @@ export const {
   setSelectedNodeInput,
   setSelectedNodeLabel,
   setEdgeType,
-  setNodeCount
+  setNodeCount,
+  setSavedChanges
 } = dagSlice.actions;
 
 export default dagSlice.reducer;
