@@ -34,7 +34,7 @@ import NodePropertyEditor from './NodePropertyEditor';
 
 import './overview.css';
 
-import { data, operations, scenarios, dimensions } from './constants';
+import { data, operations, scenarios, dimensions, threshold_ops } from './constants';
 
 const nodeTypes = {
   load: LoadNode,
@@ -82,6 +82,13 @@ const genNode = (type, position) => {
         input[label] = false;
       });
       break;
+    case 'threshold':
+      input = {
+        value: '',
+        type: threshold_ops[0]
+      };
+    break;
+
   }
 
   return {
@@ -174,9 +181,19 @@ const OverviewFlow = () => {
         let input;
 
         if (node.type === 'sum') {
-          const prevInput = {...node.data.input};
-          input = prevInput;
-          input[event.target.name] = event.target.checked;
+          input = {
+            ...node.data.input,
+            [event.target.name]: event.target.checked
+          };
+        } else if (node.type === 'threshold') {
+
+          const property_changed = event.target.type === 'number' ? 'value' : 'type';
+
+          input = {
+            ...node.data.input,
+            [property_changed]: event.target.value
+          };
+
         } else {
           input = event.target.value;
         }

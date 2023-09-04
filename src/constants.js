@@ -7,6 +7,11 @@ export const data = [
   'land cover' // use
 ];
 
+export const threshold_ops = [
+  'greater_than', 'greater_than_or_equal', 'less_than',
+  'less_than_or_equal', 'equal', 'not_equal'
+];
+
 export const dimensions = ['lat', 'lon', 'time', 'country', 'scenario', 'realization'];
 
 export const scenarios = [

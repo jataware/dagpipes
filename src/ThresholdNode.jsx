@@ -1,14 +1,13 @@
 import React, { memo } from 'react';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
+import TextField from '@mui/material/TextField';
 import { css } from '@emotion/css';
+import { threshold_ops } from './constants';
 
 
-const data = ['greater_than', 'greater_than_or_equal', 'less_than',
-              'less_than_or_equal', 'equal', 'not_equal'];
+const options = threshold_ops.map(i => ({value: i, label: i}));
 
-const options = data.map(i => ({value: i, label: i}));
-
-function Select({ value, handleId, nodeId }) {
+function Select({ input, handleId, nodeId, onChange }) {
 
   return (
     <div className={css`
@@ -16,45 +15,66 @@ function Select({ value, handleId, nodeId }) {
         margin-bottom: 10px;
     `}>
       <Handle
-        className={css`top: -56px;
-width: 11px;
-  height: 11px;
-  border-radius: 2px;
-  background-color: #778899;
-`}
+        className={css`
+          top: -63px;
+          width: 11px;
+          height: 11px;
+          border-radius: 2px;
+          background-color: #778899;
+        `}
         type="target"
         position={Position.Top}
         id={handleId}
       />
-      <label htmlFor="value">Value</label>
-      <br />
-      <input
-        style={{width: '50%'}}
-        type="number"
-        className="nodrag"
-        id="value" />
-      <div>Type</div>
-      <select
-        className="nodrag"
-      >
-        {options.map((option) => (
-          <option
-            key={option.value}
-            value={option.value}
-          >
-            {option.label}
-          </option>
-        ))}
-      </select>
+
+      <div className={css`margin-bottom: 1rem;`}>
+        <TextField
+          type="number"
+          className="nodrag"
+          label="Value"
+          value={input.value}
+          placeholder="1"
+          onChange={onChange.bind(this, nodeId)}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+      </div>
+
+      <div>
+        <TextField
+          InputLabelProps={{
+            shrink: true,
+          }}
+          label="Type"
+          select
+          className="nodrag"
+          value={input.type}
+          onChange={onChange.bind(this, nodeId)}
+          SelectProps={{
+            native: true
+          }}
+        >
+          {options.map((option) => (
+            <option
+              key={option.value}
+              value={option.value}
+            >
+              {option.label}
+            </option>
+          ))}
+        </TextField>
+      </div>
+
       <Handle
         className={css`
-bottom: -25px;
-  right: -15px;
-  width: 11px;
-  height: 11px;
-  border-radius: 2px;
-  background-color: #778899;
-`}
+          bottom: -21px;
+          right: -15px;
+          width: 11px;
+          height: 11px;
+          border-radius: 2px;
+          background-color: #778899;
+        `}
         type="source"
         position={Position.Bottom}
         id={handleId}
@@ -65,18 +85,17 @@ bottom: -25px;
 
 
 const headerStyle = css`
-         padding: 8px 10px;
-         border-bottom: 1px solid #e2e8f0;
-      `;
+  padding: 8px 10px;
+  border-bottom: 1px solid #e2e8f0;
+`;
 
 const bodyStyle = css`
-         padding: 0.5rem;
-         select {
-           width: 100%;
-           margin-top: 5px;
-           font-size: 10px;
-         }
-      `;
+  padding: 1rem 0.75rem 0.25rem 0.75rem;
+  select {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+`;
 
 function CustomNode({ id, data }) {
   return (
@@ -87,7 +106,8 @@ function CustomNode({ id, data }) {
       <div className={bodyStyle}>
         <Select
           nodeId={id}
-          value={data.input}
+          input={data.input}
+          onChange={data.onChange}
         />
       </div>
     </>
