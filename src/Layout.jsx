@@ -1,13 +1,15 @@
 import React, { useCallback } from 'react';
 import { css } from '@emotion/css';
-import './layout.scss';
 import clsx from 'clsx';
 import random from 'lodash/random';
 
 import PngLogo from "./assets/DAG|PIPES.png";
+import DojoLogo from "./assets/dojo_logo.svg";
 import HomeIcon from '@mui/icons-material/Home';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import MailIcon from '@mui/icons-material/MailOutline';
+
+import './layout.scss';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -80,31 +82,41 @@ const EdgeTypeSelector = (props) => {
   );
 };
 
+const Footer = (props) => {
+  const nodeCount = useSelector((state) => state.dag.nodeCount);
+
+  return (
+    <footer className={css`background: white;`}>
+      {nodeCount} nodes.
+    </footer>
+  );
+};
 
 const GridLayout = ({children}) => {
 
-  const nodeCount = useSelector((state) => state.dag.nodeCount);
-
   // For Logo:
-  const size = random(200, 440),
-        x = random(-50, 0),
-        y = random(-50, 0);
+  // const size = random(200, 440),
+  //       x = random(-50, 0),
+  //       y = random(-50, 0);
 
   return (
     <div className="container">
 
-      <header className={css`
-       }
-      `}>
+      <header>
 
         <div
           className={clsx([
             css`
-               background-image: url(${PngLogo});
+               /* background-color: linear-gradient(60deg,#26c6da,#00acc1) */
+               background-image: url(${DojoLogo});
+               background-color: #26c6da;
+               border-radius: 7px;
+               /* background-image: url(PngLogo); */
                cursor: pointer;
-               background-position-x: ${x}px;
-               background-position-y: ${y}px;
-               background-size: ${size}px;
+               background-position-x: -3px;
+               background-position-y: -1px;
+               /* background-size: sizepx; */
+               background-size: cover;
              `,
             'logo'
           ])}
@@ -137,8 +149,16 @@ const GridLayout = ({children}) => {
         {children}
       </main>
 
-      <aside className={css`background: white;`}>
-        <h3>Global</h3>
+      <aside className={css`background: white; padding-bottom: 1.5rem;`}>
+       <h3 className={css`
+             background: linear-gradient(60deg,#26c6da,#00acc1);
+             padding: 1.33rem 0;
+             border-top-left-radius: 5px;
+             border-top-right-radius: 5px;
+             margin-top: -1px;
+             width: 100%;
+             color: white;`}
+          >Settings</h3>
         <h4 className={css`color: gray;`}>
           Scenarios
         </h4>
@@ -153,9 +173,7 @@ const GridLayout = ({children}) => {
         <EdgeTypeSelector />
       </aside>
 
-      <footer className={css`background: white;`}>
-        {nodeCount} nodes.
-      </footer>
+      <Footer />
 
     </div>
   );

@@ -4,8 +4,6 @@ import { css } from '@emotion/css';
 
 import AutoComplete from './Autocomplete';
 
-// const data = ['China', 'India', 'United States', 'Canada', 'Mexico'];
-// const options = data.map(i => ({value: i, label: i}));
 
 
 function Select({ value, handleId, nodeId }) {

@@ -8,11 +8,11 @@ import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root'))
   .render(
-    <Provider store={store}>
-      <React.StrictMode>
-        <StyledEngineProvider injectFirst>
+    <React.StrictMode>
+      <StyledEngineProvider injectFirst>
+        <Provider store={store}>
           <App />
-        </StyledEngineProvider>
-      </React.StrictMode>
-    </Provider>
+        </Provider>
+      </StyledEngineProvider>
+    </React.StrictMode>
   );

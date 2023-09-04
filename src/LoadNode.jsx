@@ -1,23 +1,33 @@
 import React, { memo } from 'react';
 import { css } from '@emotion/css';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
+import TextField from '@mui/material/TextField';
 
 import { data } from './constants';
-// import identity from 'lodash/identity';
 
-const options = data.map(i => ({value: i, label: i}));
+const options = data.map(i => ({
+  label: i,
+  value: i
+    .split('(')[0]
+    .trim()
+}));
 
 
-function Select({ value, nodeId }) {
+function Select({ input, nodeId, onChange }) {
 
   return (
     <div className={css`
         position: relative;
         margin-bottom: 10px;
     `}>
-      <div>Data Source</div>
-      <select
-        className="nodrag"
+      <TextField
+        select
+        label="Data Source"
+        value={input}
+        onChange={onChange.bind(this, nodeId)}
+        SelectProps={{
+          native: true
+        }}
       >
         {options.map((option) => (
           <option
@@ -27,7 +37,7 @@ function Select({ value, nodeId }) {
             {option.label}
           </option>
         ))}
-      </select>
+      </TextField>
       <Handle
         type="source"
         position={Position.Bottom}
@@ -42,15 +52,15 @@ const headerStyle = css`
       `;
 
 const bodyStyle = css`
-         padding: 0.5rem;
+         padding: 1rem 0.75rem 0.25rem 0.75rem;
          select {
-           width: 100%;
-           margin-top: 5px;
-           font-size: 10px;
+           padding-top: 0.5rem;
+           padding-bottom: 0.5rem;
          }
       `;
 
-function CustomNode({ id, data }) {
+function CustomNode({ id, data, ...props }) {
+
   return (
     <>
       <div className={headerStyle}>
@@ -59,7 +69,8 @@ function CustomNode({ id, data }) {
       <div className={bodyStyle}>
         <Select
           nodeId={id}
-          value={data.input}
+          onChange={data.onChange}
+          input={data.input}
         />
       </div>
     </>

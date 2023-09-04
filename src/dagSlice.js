@@ -7,7 +7,6 @@ const initialState = {
   selectedNodeType: null,
   selectedNodeLabel: null,
   selectedNodeInput: null,
-  selectedNodeOperation: null,
   edgeType: 'default',
   unsavedChanges: false
 };
@@ -25,6 +24,9 @@ export const dagSlice = createSlice({
       state.nodeCount -= 1;
       state.unsavedChanges = true;
     },
+    setNodeCount: (state, action) => {
+      state.nodeCount = action.payload;
+    },
     incrementEdgeCount: (state) => {
       state.edgeCount += 1;
       state.unsavedChanges = true;
@@ -34,28 +36,24 @@ export const dagSlice = createSlice({
       state.unsavedChanges = true;
     },
     selectNode: (state, action) => {
-      const { id, type, data: {label, input, operation} } = action.payload;
+      const { id, type // , data: {label, input}
+            } = action.payload;
       state.selectedNodeId = id;
       state.selectedNodeType = type;
-      state.selectedNodeLabel = label;
-      state.selectedNodeInput = input;
-      state.selectedNodeOperation = operation;
+      // state.selectedNodeLabel = label;
+      // state.selectedNodeInput = input;
     },
     unselectNodes: (state) => {
       state.selectedNodeId = null;
       state.selectedNodeType = null;
       state.selectedNodeLabel = null;
       state.selectedNodeInput = null;
-      state.selectedNodeOperation = null;
     },
     setSelectedNodeLabel: (state, action) => {
       state.selectedNodeLabel = action.payload;
     },
     setSelectedNodeInput: (state, action) => {
       state.selectedNodeInput = action.payload;
-    },
-    setSelectedNodeOperation: (state, action) => {
-      state.selectedNodeOperation = action.payload;
     },
     setEdgeType: (state, action) => {
       state.edgeType = action.payload;
@@ -74,8 +72,8 @@ export const {
   unselectNodes,
   setSelectedNodeInput,
   setSelectedNodeLabel,
-  setSelectedNodeOperation,
-  setEdgeType
+  setEdgeType,
+  setNodeCount
 } = dagSlice.actions;
 
 export default dagSlice.reducer;

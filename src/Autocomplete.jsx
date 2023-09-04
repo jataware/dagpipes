@@ -184,9 +184,6 @@ export default function CustomizedHook() {
     getOptionLabel: (option) => option.title,
   });
 
-  console.log('getInputProps(),', getInputProps());
-  // console.log('value,', value);
-
   return (
     <Root>
       <div {...getRootProps()}>

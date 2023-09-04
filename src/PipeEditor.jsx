@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react';
+
 import ReactFlow, {
   addEdge,
   ReactFlowProvider,
@@ -10,12 +11,12 @@ import ReactFlow, {
   Panel
 } from 'reactflow';
 
+import Button from '@mui/material/Button';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { decrementNodeCount, incrementNodeCount,
-         selectNode,
-         unselectNodes,
-         setSelectedNodeLabel,
-         setSelectedNodeInput
+         setNodeCount, selectNode, unselectNodes,
+         setSelectedNodeLabel, setSelectedNodeInput
        } from './dagSlice';
 
 import { nodes as initialNodes, edges as initialEdges } from './initial-elements';
@@ -57,33 +58,33 @@ const nodeTypeStyles = {
   default: {}
 };
 
-const nodeTypeLabels = {
-  input: 'Load',
-  default: 'Operation',
-  output: 'Save',
-};
 
 // Shared among OverviewFlow instances,
 // 1 in our app, but needs to be a ref if OverviewFlow is reused
-let _idCounter = 1;
-let _edgeIdCounter = 1;
-const genId = () => `n_${_idCounter++}`;
+// let _idCounter = 1;
+// let _edgeIdCounter = 1;
+const genId = () => `n_${window.crypto.randomUUID()}`;
 
-const genEdgeId = () => `e_${_edgeIdCounter++}`;
+// const genEdgeId = () => `e_${window.crypto.randomUUID()}`;
 
 const genNode = (type, position) => {
   const style = nodeTypeStyles[type];
   const id = genId();
-  const typeLabel = nodeTypeLabels[type];
-  const label = `${typeLabel}`;
-  const input = '';
+
+  let input = ''; // set default value per type
+
+  switch(type) {
+    case 'load':
+      input = 'pr';
+    break;
+  }
 
   return {
     id,
     type,
     style,
     position,
-    data: { label, input },
+    data: { label: type, input, },
   };
 };
 
@@ -102,16 +103,18 @@ const OverviewFlow = () => {
   }, []);
 
   const {
-    selectedNodeId, selectedNodeOperation,
-    selectedNodeLabel, selectedNodeInput,
-    edgeType
+    selectedNodeId, selectedNodeLabel, selectedNodeInput, edgeType
   } = useSelector((state) => state.dag);
 
   const dispatch = useDispatch();
 
+  const setSelectedNode = (node) => {
+    dispatch(selectNode({id: node.id, type: node.type}));
+  };
+
   const setCurrentNode = (event, nodeEl) => {
 		const node = nodes.find((n) => n.id === nodeEl.id);
-    dispatch(selectNode(node));
+    setSelectedNode(node);
 	};
 
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -132,50 +135,56 @@ const OverviewFlow = () => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   setNodes((nds) =>
+  //     nds.map((node) => {
+  //       if (node.id === selectedNodeId) {
+  //         node.data = {
+  //           ...node.data,
+  //           label: selectedNodeLabel,
+  //         };
+  //       }
+
+  //       return node;
+  //     })
+  //   );
+  // }, [selectedNodeLabel, setNodes]);
+
+  // useEffect(() => {
+  //   setNodes((nds) =>
+  //     nds.map((node) => {
+  //       if (node.id === selectedNodeId) {
+  //         node.data = {
+  //           ...node.data,
+  //           input: selectedNodeInput,
+  //         };
+  //       }
+
+  //       return node;
+  //     })
+  //   );
+  // }, [selectedNodeInput, setNodes]);
+
+  const onNodeChange = (currNodeId, event) => {
     setNodes((nds) =>
       nds.map((node) => {
-        if (node.id === selectedNodeId) {
-          node.data = {
-            ...node.data,
-            label: selectedNodeLabel,
-          };
+        if (node.id !== currNodeId) {
+          return node;
         }
 
-        return node;
-      })
-    );
-  }, [selectedNodeLabel, setNodes]);
+        // different properties depend on node 'type'..?
+        const input = event.target.value;
 
-  useEffect(() => {
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === selectedNodeId) {
-          node.data = {
+        return {
+          ...node,
+          data: {
             ...node.data,
-            input: selectedNodeInput,
-          };
-        }
-
-        return node;
+            input
+          },
+        };
       })
     );
-  }, [selectedNodeInput, setNodes]);
-
-  useEffect(() => {
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === selectedNodeId) {
-          node.data = {
-            ...node.data,
-            operation: selectedNodeOperation,
-          };
-        }
-
-        return node;
-      })
-    );
-  }, [selectedNodeOperation, setNodes]);
+  };
 
   const onDrop = useCallback(
     (event) => {
@@ -194,43 +203,47 @@ const OverviewFlow = () => {
       });
 
       const newNode = genNode(type, position);
+      newNode.data.onChange = onNodeChange;
 
       setNodes((nds) => nds.concat(newNode));
       dispatch(incrementNodeCount());
-      dispatch(selectNode(newNode));
+      setSelectedNode(newNode);
     },
     [reactFlowInstance]
   );
-
-  // TODO likely remove this...
-  // const onConnectEnd = useCallback(
-  //   (event) => {
-  //     const targetIsPane = event.target.classList.contains('react-flow__pane');
-
-  //     if (targetIsPane) {
-  //       // we need to remove the wrapper bounds, in order to get the correct position
-  //       const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
-  //       const position = reactFlowInstance.project({ x: event.clientX - left - 75, y: event.clientY - top });
-  //       const newNode = genNode('default', position);
-  //       const { id } = newNode;
-
-  //       setNodes((nds) => nds.concat(newNode));
-  //       setEdges((eds) => eds.concat({
-  //         id: genEdgeId(),
-  //         source: connectingNodeId.current,
-  //         target: id
-  //       }));
-  //       dispatch(incrementNodeCount());
-  //       dispatch(selectNode(newNode));
-  //     }
-  //   },
-  //   [reactFlowInstance]
-  // );
 
   const edgesWithUpdatedTypes = edges.map((edge) => {
     edge.type = edgeType;
     return edge;
   });
+
+  const onSave = useCallback(() => {
+    if (reactFlowInstance) {
+      const flow = reactFlowInstance.toObject();
+      console.log(JSON.stringify(flow, 2, null));
+      window.localStorage.setItem('dagpipes-flow-session', JSON.stringify(flow));
+    }
+  }, [reactFlowInstance]);
+
+  const onRestore = useCallback(() => {
+    const restoreFlow = async () => {
+      const flow = JSON.parse(localStorage.getItem('dagpipes-flow-session'));
+
+      if (flow) {
+        const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+
+        const {nodes=[]} = flow;
+        nodes.map(n => {n.data.onChange = onNodeChange; return n;});
+        setNodes(nodes);
+        setEdges(flow.edges || []);
+        setNodeCount(nodes.length);
+        // setViewport({ x, y, zoom }); // TODO
+      }
+    };
+
+    restoreFlow();
+  }, [setNodes// , setViewport
+     ]);
 
   return (
     <div className="wrap-full-size">
@@ -275,6 +288,10 @@ const OverviewFlow = () => {
 
           </ReactFlow>
         </div>
+        <Panel position="top-left">
+          <Button onClick={onSave}>SAVE</Button>
+          <Button onClick={onRestore}>LOAD</Button>
+        </Panel>
         <Panel position="bottom-center">
           <DragBar />
         </Panel>

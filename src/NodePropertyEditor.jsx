@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   setSelectedNodeLabel,
   setSelectedNodeInput,
-  setSelectedNodeOperation,
 } from './dagSlice';
 
 import './updatenode.scss';
@@ -15,7 +14,7 @@ export default (props) => {
 
   const {
     selectedNodeLabel, selectedNodeInput,
-    selectedNodeType, selectedNodeOperation
+    selectedNodeType
   } = useSelector((state) => state.dag);
 
   const dispatch = useDispatch();
@@ -40,18 +39,6 @@ export default (props) => {
           <input
             value={selectedNodeInput}
             onChange={(evt) => dispatch(setSelectedNodeInput(evt.target.value))}
-          />
-        </>
-      )}
-
-      {selectedNodeType === 'default' && (
-        <>
-          <label className="updatenode__default">
-            Operation:
-          </label>
-          <input
-            value={selectedNodeOperation}
-            onChange={(evt) => dispatch(setSelectedNodeOperation(evt.target.value))}
           />
         </>
       )}

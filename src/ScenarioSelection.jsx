@@ -10,10 +10,12 @@ import clsx from 'clsx';
  **/
 export function CheckboxLabels({labels, className=''}) {
   return (
-    <FormGroup className={clsx(["nodrag", className])}>
+    <FormGroup className={clsx([className])}>
       {labels.map(label => (
         <FormControlLabel
+          key={label}
           control={<Checkbox
+                     disableRipple
                      sx={{
                        color: pink[800],
                        '&.Mui-checked': {
@@ -28,8 +30,8 @@ export function CheckboxLabels({labels, className=''}) {
   );
 }
 
-export default () => {
+export default (props) => {
   return (
-    <CheckboxLabels labels={scenarios} />
+    <CheckboxLabels labels={scenarios} {...props} />
   );
 };
