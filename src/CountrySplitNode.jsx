@@ -3,7 +3,7 @@ import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 import { css } from '@emotion/css';
 
 import AutoComplete from './Autocomplete';
-
+import NodeTitles from './nodeLabels';
 
 /**
  *
@@ -73,7 +73,7 @@ function CustomNode({ id, data }) {
   return (
     <>
       <div className={headerStyle}>
-        <strong>Reduce by Country</strong>
+        <strong>{NodeTitles.COUNTRY_SPLIT}</strong>
       </div>
       <div className={bodyStyle}>
         <Select

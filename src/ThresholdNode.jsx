@@ -2,8 +2,9 @@ import React, { memo } from 'react';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 import TextField from '@mui/material/TextField';
 import { css } from '@emotion/css';
-import { threshold_ops } from './constants';
 
+import { threshold_ops } from './constants';
+import NodeTitles from './nodeLabels';
 
 const options = threshold_ops.map(i => ({value: i, label: i}));
 
@@ -101,7 +102,7 @@ function CustomNode({ id, data }) {
   return (
     <>
       <div className={headerStyle}>
-        <strong>Threshold</strong>
+        <strong>{NodeTitles.THRESHOLD}</strong>
       </div>
       <div className={bodyStyle}>
         <Select

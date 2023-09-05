@@ -4,7 +4,7 @@ import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 import TextField from '@mui/material/TextField';
 
 import { data } from './constants';
-
+import NodeTitles from './nodeLabels';
 
 const options = [
   ...data,
@@ -70,7 +70,7 @@ function CustomNode({ id, data }) {
   return (
     <>
       <div className={headerStyle}>
-        <strong>Load</strong>
+        <strong>{NodeTitles.LOAD}</strong>
       </div>
       <div className={bodyStyle}>
         <Select

@@ -1,6 +1,7 @@
 import React from 'react';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import Button from '@mui/material/Button';
+import NodeTitles from './nodeLabels';
 
 import './dragBar.scss';
 
@@ -25,7 +26,7 @@ export default () => {
           onDragStart={(event) => {return onDragStart(event, 'load');}}
           draggable
         >
-          Load
+          {NodeTitles.LOAD}
         </Button>
 
         <Button
@@ -36,7 +37,7 @@ export default () => {
           onDragStart={(event) => {return onDragStart(event, 'threshold');}}
           draggable
         >
-          Threshold
+          {NodeTitles.THRESHOLD}
         </Button>
 
         <Button
@@ -47,7 +48,7 @@ export default () => {
           onDragStart={(event) => {return onDragStart(event, 'multiply');}}
           draggable
         >
-          Multiply
+          {NodeTitles.MULTIPLY}
         </Button>
 
         <Button
@@ -58,7 +59,7 @@ export default () => {
           onDragStart={(event) => {return onDragStart(event, 'country_split');}}
           draggable
         >
-          Country Split
+          {NodeTitles.COUNTRY_SPLIT}
         </Button>
 
         <Button
@@ -69,7 +70,7 @@ export default () => {
           onDragStart={(event) => {return onDragStart(event, 'sum');}}
           draggable
         >
-          Sum
+          {NodeTitles.SUM}
         </Button>
 
         <Button
@@ -81,7 +82,7 @@ export default () => {
           onDragStart={(event) => {return onDragStart(event, 'save');}}
           draggable
         >
-          Save
+          {NodeTitles.SAVE}
         </Button>
 
       </section>

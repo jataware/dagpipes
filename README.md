@@ -1,6 +1,7 @@
 
 
-Dar-drop User Interface that describes pipelines for transforming data sources.
+Drag-drop User Interface that describes pipelines for transforming data sources.
+Uses connected nodes to create a DAG (directed acyclic graph) that describes such pipeline.
 Backend service pending.
 
 # Initial Setup
@@ -19,3 +20,13 @@ Backend service pending.
 ```
 $ yarn dev
 ```
+
+# For Demo
+
+Modify the node title/button title labels by going into:
+```
+src/nodeLabels.js
+```
+
+and modifying the constant values to whatever user-facing value needed.
+

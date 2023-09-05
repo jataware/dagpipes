@@ -2,6 +2,8 @@ import React, { memo } from 'react';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 import { css } from '@emotion/css';
 
+import NodeTitles from './nodeLabels';
+
 const headerStyle = css`
     padding: 8px 10px;
 `;
@@ -9,7 +11,7 @@ const headerStyle = css`
 function CustomNode({ id, data }) {
   return (
       <div className={headerStyle}>
-        <strong>Multiply</strong>
+        <strong>{NodeTitles.MULTIPLY}</strong>
         <div className="custom-node__multiply">
           <Handle
             className={css`

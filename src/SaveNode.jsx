@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 import { css } from '@emotion/css';
-
 import TextField from '@mui/material/TextField';
+import NodeTitles from './nodeLabels';
 
 /**
  *
@@ -43,7 +43,7 @@ function CustomNode({ id, data }) {
   return (
     <>
       <div className={headerStyle}>
-        <strong>Save</strong>
+        <strong>{NodeTitles.SAVE}</strong>
       </div>
       <div className={bodyStyle}>
         <FileSelect

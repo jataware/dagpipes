@@ -7,6 +7,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {dimensions} from './constants';
 
+import NodeTitles from './nodeLabels';
+
 
 const checkboxContainerStyle = css`
     display: flex;
@@ -32,7 +34,7 @@ function Select({ input, handleId, nodeId, onChange }) {
         position={Position.Top}
         id={handleId}
       />
-      <div>Dimension</div>
+      <div>{NodeTitles.SUM_DIMENSION}</div>
 
       <FormGroup className={checkboxContainerStyle}>
         {dimensions.map(label => (
@@ -90,7 +92,7 @@ function CustomNode({ id, data }) {
   return (
     <>
       <div className={headerStyle}>
-        <strong>Sum</strong>
+        <strong>{NodeTitles.SUM}</strong>
       </div>
       <div className={bodyStyle}>
         <Select
