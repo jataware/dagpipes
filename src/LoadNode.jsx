@@ -5,7 +5,13 @@ import TextField from '@mui/material/TextField';
 
 import { data } from './constants';
 
-const options = data.map(i => ({
+
+const options = [
+  ...data,
+  'dojo:Weekly Fire Alerts by Country',
+  'dojo:CRU Observed Monthly Precipitation',
+  'dojo:UN - Internet Usage Percentage',
+].map(i => ({
   label: i,
   value: i
     .split('(')[0]

@@ -135,13 +135,14 @@ const GridLayout = ({children}) => {
              width: 100%;
              color: white;`}
           >Settings</h3>
-        <h4 className={css`color: gray;`}>
-          Scenarios
-        </h4>
 
-        <div className={css`display:flex; flex-direction: column; align-items: center;`}>
-          <ScenarioSelection />
-        </div>
+        {/* <h4 className={css`color: gray;`}> */}
+        {/*   Scenarios */}
+        {/* </h4> */}
+
+        {/* <div className={css`display:flex; flex-direction: column; align-items: center;`}> */}
+        {/*   <ScenarioSelection /> */}
+        {/* </div> */}
 
         <h4 className={css`color: gray;`}>
           Edge Type
