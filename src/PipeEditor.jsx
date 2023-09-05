@@ -11,6 +11,7 @@ import ReactFlow, {
   Panel
 } from 'reactflow';
 
+import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -281,8 +282,10 @@ const OverviewFlow = () => {
           </ReactFlow>
         </div>
         <Panel position="top-left">
-          <Button onClick={onSave}>SAVE</Button>
-          <Button onClick={onRestore}>LOAD</Button>
+          <ButtonGroup disableElevation>
+            <Button onClick={onSave}>SAVE</Button>
+            <Button onClick={onRestore}>LOAD</Button>
+          </ButtonGroup>
         </Panel>
         <Panel position="bottom-center">
           <DragBar />
