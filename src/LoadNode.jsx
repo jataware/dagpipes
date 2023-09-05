@@ -3,14 +3,12 @@ import { css } from '@emotion/css';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
 import TextField from '@mui/material/TextField';
 
-import { data } from './constants';
+import { data, dojoMockDatasources } from './constants';
 import NodeTitles from './nodeLabels';
 
 const options = [
   ...data,
-  'dojo:Weekly Fire Alerts by Country',
-  'dojo:CRU Observed Monthly Precipitation',
-  'dojo:UN - Internet Usage Percentage',
+  ...dojoMockDatasources,
 ].map(i => ({
   label: i,
   value: i

@@ -30,3 +30,5 @@ src/nodeLabels.js
 
 and modifying the constant values to whatever user-facing value needed.
 
+Can also modify lists, values under `src/constants.js`, which will modify options for other node types, operation types, etc
+

@@ -1,4 +1,12 @@
 
+export const dojoMockDatasources = [
+  'dojo:Weekly Fire Alerts by Country',
+  'dojo:CRU Observed Monthly Precipitation',
+  'dojo:UN - Internet Usage Percentage'
+];
+
+// Data from initial discussion. Pseudo-hardcoded for now.
+// Mix of CMIP6, NASA, and others
 export const data = [
   'pr (precipitation)',
   'tas (mean surface air temperature)',
@@ -14,8 +22,10 @@ export const threshold_ops = [
   'less_than_or_equal', 'equal', 'not_equal'
 ];
 
+// SUM
 export const dimensions = ['lat', 'lon', 'time', 'country', 'scenario', 'realization'];
 
+// Hidden for now
 export const scenarios = [
   'ssp126',
   'ssp245',

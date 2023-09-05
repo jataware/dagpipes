@@ -35,7 +35,7 @@ import NodePropertyEditor from './NodePropertyEditor';
 
 import './overview.css';
 
-import { data, operations, scenarios, dimensions, threshold_ops } from './constants';
+import { data, scenarios, dimensions, threshold_ops } from './constants';
 
 const nodeTypes = {
   load: LoadNode,
